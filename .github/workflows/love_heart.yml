@@ -1,0 +1,31 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: 画爱心
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # 所以下面这一个 Job 会实际产生 6 台并发执行的 VM 来完成编译构建
+  pyinstaller-build:
+    # GitHub Workflows 的每一个 Job 均支持下面这样的「策略矩阵」
+    # 可以让 Workflows 根据不同的配置自动生成相似的环境并发执行
+    strategy:
+      matrix:
+        os: [macos, ubuntu, windows]
+        arch: [x86, x64]
+    # Workflows 会在 3 个操作系统上并发执行这个 Job
+    runs-on: '${{ matrix.os }}-latest'
+    steps:
+      - name: Create Executable
+        uses: sayyid5416/pyinstaller@v1
+        with:
+          python_ver: '3.12'
+          spec: 'love_heart.py'
+          upload_exe_with_name: 'love_heart-${{ matrix.os }}-${{ matrix.arch }}'
+          options: --onefile, --name "love_heart-${{ matrix.os }}-${{ matrix.arch }}", --windowed,
+          # 这个 Action 底层使用了 actions/setup-python 配置 Python 环境
+          # 那个 Action 支持设置 Python 架构为 x86 或者 x64
+          # 这里还会在 2 个不同的架构上并发执行 Job
+          python_arch: ${{ matrix.arch }}
