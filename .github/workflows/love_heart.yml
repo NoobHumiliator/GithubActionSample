@@ -12,9 +12,13 @@ jobs:
     # GitHub Workflows 的每一个 Job 均支持下面这样的「策略矩阵」
     # 可以让 Workflows 根据不同的配置自动生成相似的环境并发执行
     strategy:
+      fail-fast: false
       matrix:
         os: [macos, ubuntu, windows]
-        arch: [x86, x64]
+        arch: [x64]
+        include:
+          - os: windows
+            arch: x86
     # Workflows 会在 3 个操作系统上并发执行这个 Job
     runs-on: '${{ matrix.os }}-latest'
     steps:
