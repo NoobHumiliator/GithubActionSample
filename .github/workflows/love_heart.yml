@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # 所以下面这一个 Job 会实际产生 6 台并发执行的 VM 来完成编译构建
+  # 所以下面这一个 Job 会实际产生 4 台并发执行的 VM 来完成编译构建
   pyinstaller-build:
     # GitHub Workflows 的每一个 Job 均支持下面这样的「策略矩阵」
     # 可以让 Workflows 根据不同的配置自动生成相似的环境并发执行
@@ -16,6 +16,7 @@ jobs:
       matrix:
         os: [macos, ubuntu, windows]
         arch: [x64]
+        # 需要注意：所有系统均支持 Python x64，但只有 Windows 额外支持 x86
         include:
           - os: windows
             arch: x86
