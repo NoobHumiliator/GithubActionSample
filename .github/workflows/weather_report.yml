@@ -9,9 +9,6 @@ on:
     - cron : '00 23 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   build:
 
@@ -23,6 +20,8 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.12"
+        cache: pip
+        cache-dependency-path: requirements.txt
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
